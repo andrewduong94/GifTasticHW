@@ -4,6 +4,7 @@
 <head>
   <meta charset="utf-8">
   <title>GifTastic</title>
+  <link rel="stylesheet" type="text/css" href="assets/css/style.css">
 
 </head>
 <!--Html layout-->
@@ -46,13 +47,24 @@
             var sportsDiv = $("<div class='sport'>");
             var rating = response.data[i].rating;
             sportsDiv.text('Rating: ' + rating);
-            var gifURL = response.data[i].images.downsized_medium.url;
+            var gifURL = response.data[i].images.fixed_height_still.url;
             var gif = $("<img>").attr("src", gifURL)
+            var stillURL = response.data[i].images.fixed_height_still.url;
+            $(gif).attr("data-still", stillURL)
+            var animateURL = response.data[i].images.fixed_height.url;
+            $(gif).attr("data-animate", animateURL)
+            $(gif).addClass("gifs")
             sportsDiv.prepend(gif)
             $("#gifs").append(sportsDiv);
 
             }
-        })
+            //onclick function to animate GIF
+            $(".gifs").on("click", function(){
+                 $(this).attr("src", $(this).attr("data-animate"));
+            })
+    })
+
+
 
 }
 
