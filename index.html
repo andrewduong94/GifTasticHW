@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>GifTastic</title>
+
+</head>
+<!--Html layout-->
+<body>
+<div class="container">
+    <h1>GifTastic Sports</h1>
+    <div id="btnbody"></div>
+    <form id="renderBtn">
+        <label for="sportsInput">Search any Sports topic</label>
+        <input type="text" id="sportsInput">
+        <br>
+        <br>
+        <input id="addSport" type="submit" value="Search">
+    </form>
+    <div id="sportsBtns"></div>
+    <div id="gifs"></div>
+
+</div>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script type="text/javascript">
+//Sports array
+    var sports=["NBA", "NFL", "FIFA", "MLB", "NHL"];
+//function to displayGIFS
+    function displaySports() { 
+        $("#gifs").empty();
+        var sport = $(this).attr("data-name");
+        //number of GIFs
+        var limit = 10
+        var queryURL = "http://api.giphy.com/v1/gifs/search?q=" + sport + "&api_key=ICC7HOGOHbDU0tLKN5fhd8ZhecHVFlSm&limit=" + limit;
+        
+        $.ajax({
+            url: queryURL,
+            method: "GET"
+        }).then(function(response){
+            console.log(response)
+            
+            for (i = 0; i < limit; i++) {
+            var sportsDiv = $("<div class='sport'>");
+            var rating = response.data[i].rating;
+            sportsDiv.text('Rating: ' + rating);
+            var gifURL = response.data[i].images.downsized_medium.url;
+            var gif = $("<img>").attr("src", gifURL)
+            sportsDiv.prepend(gif)
+            $("#gifs").append(sportsDiv);
+
+            }
+        })
+
+}
+
+    function makeBtns(){
+        $("#sportsBtns").empty();
+        
+    //looping through sports array and creating buttons
+        for (var i = 0; i <sports.length; i++) {
+            var btn = $("<button>");
+            btn.addClass("sportsbtn");
+            btn.attr("data-name", sports[i]);
+            btn.text(sports[i]);
+            $('#sportsBtns').append(btn);
+        }
+    }
+    //adding input into array
+    $('#addSport').on("click", function(event) {
+        event.preventDefault();
+        var sportsInput = $('#sportsInput').val().trim();
+        sports.push(sportsInput);
+        makeBtns();
+        console.log(sports)
+    });
+    //event listener to display GIFS function
+    $(document).on("click", ".sportsbtn", displaySports);
+
+makeBtns()
+
+
+</script>
+</div>
+</body>
+
+</html>
